@@ -1,3 +1,4 @@
+# CRUD operation
 import mysql.connector
 
 class Server:
@@ -44,3 +45,39 @@ class Server:
             WHERE id_compte = %s
         """, (id_compte,))
         self.mydb.commit()
+    
+    def create_transaction(self, id_transaction, nom, description, montant, date, type_transaction):
+        cursor = self.mydb.cursor()
+        cursor.execute("""
+            INSERT INTO transaction (id_transaction, nom, description, montant, date, type_transaction)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (id_transaction, nom, description, montant, date, type_transaction))
+        self.mydb.commit()
+    
+    def read_transactions(self):
+        cursor = self.mydb.cursor()
+        cursor.execute("SELECT * FROM transaction")
+        for (id_transaction, nom, description, montant, date, type_transaction) in cursor:
+            print(f"ID Transaction: {id_transaction}, Nom: {nom}, Description: {description}, Montant: {montant}, Date: {date}, Type de Transaction: {type_transaction}")
+    
+    def update_transaction(self, id_transaction, nom, description, montant, date, type_transaction):
+        cursor = self.mydb.cursor()
+        cursor.execute("""
+            UPDATE transaction 
+            SET nom = %s,
+            description = %s,
+            montant = %s,
+            date = %s,
+            type_transaction = %s
+            WHERE id_transaction = %s
+            """, (nom, description, montant, date, type_transaction, id_transaction))
+        self.mydb.commit()
+        
+    def delete_transaction(self, id_transaction):
+        cursor = self.mydb.cursor()
+        cursor.execute("""
+            DELETE FROM transaction
+            WHERE id_transaction = %s
+        """, (id_transaction,))
+        self.mydb.commit()
+    
