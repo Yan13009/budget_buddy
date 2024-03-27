@@ -15,7 +15,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Interface d'inscription et de connexion")
 
 # Charger l'image de fond
-background_image = pygame.image.load('background.jpg')  # Remplacez 'background.jpg' par le chemin de votre image
+background_image = pygame.image.load('Images/background.jpg')  # Remplacez 'background.jpg' par le chemin de votre image
 background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 font = pygame.font.SysFont(None, 36)
@@ -153,8 +153,9 @@ def main():
     input_boxes = [TextBox(300, 200, 200, 40), TextBox(300, 300, 200, 40), TextBox(300, 400, 200, 40), TextBox(300, 500, 200, 40)]
 
     # Créer des boutons pour l'inscription et la connexion
-    register_button = Button(300, 550, 100, 50, GREEN, BLACK, "S'inscrire", lambda: handle_register(input_boxes))
-    login_button = Button(500, 550, 100, 50, RED, BLACK, "Se connecter", handle_login)
+    register_button = Button(300, 550, 100, 50, None, BLACK, "S'inscrire", lambda: handle_register(input_boxes))
+    login_button = Button(500, 550, 100, 50, None, BLACK, "Se connecter", handle_login)
+
 
     while running:
         for event in pygame.event.get():
