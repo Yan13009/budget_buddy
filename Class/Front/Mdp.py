@@ -2,7 +2,7 @@ import pygame
 import re
 import mysql.connector
 
-class SecuriseMdp:
+class Mdp:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((600, 400))
@@ -90,5 +90,5 @@ class SecuriseMdp:
             self.clock.tick(60)
 
 if __name__ == "__main__":
-    password_page = SecuriseMdp()
+    password_page = Mdp()
     password_page.run()
