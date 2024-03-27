@@ -1,9 +1,12 @@
 import pygame
 import re
+import mysql.connector
 
 class SecuriseMdp:
     def __init__(self):
-        self.screen = pygame.display.get_surface()
+        pygame.init()
+        self.screen = pygame.display.set_mode((600, 400))
+        pygame.display.set_caption("Mot de passe")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 32)
 
@@ -19,14 +22,16 @@ class SecuriseMdp:
                     self.password = self.password[:-1]
                 elif event.key == pygame.K_RETURN:
                     # Valider le mot de passe lorsqu'appuyé sur Entrée
-                    if self.validate_password():
+                    if self.validate_password(self.password):
                         print("Mot de passe valide")
+                        #self.register_user("John", "Doe", "john@example.com", self.password)
                     else:
                         print("Mot de passe non valide")
+
                 else:
                     self.password += event.unicode
 
-    def validate_password(password):
+    def validate_password(self, password):
         # Vérifie si le mot de passe contient au moins une majuscule
         if not re.search(r'[A-Z]', password):
             return False
@@ -48,14 +53,27 @@ class SecuriseMdp:
             return False
 
         return True
-    
-    
-    # Exemple d'utilisation
-    password = "MotDePasse123!"
-    if validate_password(password):
-        print("Le mot de passe est sécurisé.")
-    else:
-        print("Le mot de passe ne répond pas aux critères de sécurité requis.")
+
+    def register_user(self, nom, prenom, email, mot_de_passe):
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="root",
+                database="budget_buddy"
+            )
+
+            mycursor = mydb.cursor()
+
+            sql = "INSERT INTO compte (nom, prenom, email, mot_de_passe) VALUES (%s, %s, %s, %s)"
+            val = (nom, prenom, email, mot_de_passe)
+            mycursor.execute(sql, val)
+
+            mydb.commit()
+
+            print("Utilisateur enregistré avec succès.")
+        except Exception as e:
+            print("Erreur lors de l'enregistrement de l'utilisateur :", e)
 
     def run(self):
         running = True
@@ -64,18 +82,14 @@ class SecuriseMdp:
 
             # Dessiner l'interface utilisateur
             self.screen.fill((255, 255, 255))
-            pygame.draw.rect(self.screen, (0, 0, 0), (100, 100, 400, 50))
+            pygame.draw.rect(self.screen, (17, 86, 95), (100, 100, 400, 50))
             text_surface = self.font.render(self.password, True, (255, 255, 255))
             self.screen.blit(text_surface, (110, 110))
             pygame.display.flip()
 
             self.clock.tick(60)
 
-
-# Exemple d'utilisation
 if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((600, 400))
-    pygame.display.set_caption("Mot de passe")
     password_page = SecuriseMdp()
     password_page.run()
+
