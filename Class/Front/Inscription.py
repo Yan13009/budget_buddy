@@ -2,7 +2,6 @@ import pygame
 import sqlite3
 import re
 from pygame.locals import *
-from button import Button
 
 # Initialiser Pygame
 pygame.init()
@@ -23,9 +22,6 @@ font = pygame.font.SysFont(None, 36)
 # Couleurs
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GRAY = (200, 200, 200)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
 
 # Fonction pour vérifier si le mot de passe est sécurisé
 def is_secure_password(password):
@@ -73,11 +69,10 @@ def draw_text(text, color, x, y):
     screen.blit(surface, (x, y))
 
 # Classe pour créer des boutons
-
 class Button:
-    def __init__(self, x, y, width, height, color, text_color, text, action=None):
+    def __init__(self, x, y, width, height, text, action=None, color=None, text_color=BLACK):
         self.rect = pygame.Rect(x, y, width, height)
-        self.color = color
+        self.color = color if color else WHITE  # Utiliser WHITE comme couleur par défaut si aucune n'est spécifiée
         self.text_color = text_color
         self.text = text
         self.action = action
@@ -152,11 +147,11 @@ def main():
     running = True  # Initialise la variable running à True
 
     is_register_page = True
-    input_boxes = [TextBox(300, 200, 200, 40), TextBox(300, 300, 200, 40), TextBox(300, 400, 200, 40), TextBox(300, 500, 200, 40)]
+    input_boxes = [TextBox(300, 90, 200, 40), TextBox(300, 140, 200, 40), TextBox(300, 190, 200, 40), TextBox(300, 240, 200, 40)]
 
     # Créer des boutons pour l'inscription et la connexion
-    register_button = Button(300, 550, 100, 50, GREEN, BLACK, "S'inscrire", lambda: handle_register(input_boxes))
-    login_button = Button(500, 550, 100, 50, RED, BLACK, "Se connecter", handle_login)
+    register_button = Button(120, 300, 100, 50, "S'inscrire", handle_register)
+    login_button = Button(350, 300, 100, 50, "Se connecter", handle_login)
 
     while running:
         for event in pygame.event.get():
@@ -185,11 +180,11 @@ def main():
 
         # Afficher le texte selon la page actuelle (inscription ou connexion)
         if is_register_page:
-            draw_text("Inscription", BLACK, 350, 50)
-            draw_text("Nom:", BLACK, 129, 200)
-            draw_text("Prénom:", BLACK, 120, 300)
-            draw_text("Email:", BLACK, 120, 400)
-            draw_text("Mot de passe:", BLACK, 120, 500)
+            draw_text("Inscription", BLACK, 350, 30)
+            draw_text("Nom:", BLACK, 120, 100)
+            draw_text("Prénom:", BLACK, 120, 150)
+            draw_text("Email:", BLACK, 120, 200)
+            draw_text("Mot de passe:", BLACK, 120, 250)
         else:
             draw_text("Connexion", BLACK, 350, 100)
             draw_text("Email:", BLACK, 200, 200)
