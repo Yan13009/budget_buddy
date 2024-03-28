@@ -1,6 +1,7 @@
 import pygame
 import sqlite3
 from pygame.locals import *
+import re
 
 # Initialiser Pygame
 pygame.init()
@@ -115,43 +116,94 @@ class TextBox:
         screen.blit(text_surface, (self.rect.x + 5, self.rect.y + 5))
 
 
+
+def is_valid_email(email):
+    # Vérifie si l'email est valide en utilisant une expression régulière
+    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(email_regex, email) is not None
+
+def is_unique_email(email):
+    # Vérifie si l'email est unique dans la base de données
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE email=?", (email,))
+    result = c.fetchone()
+    conn.close()
+    return result is None
+
+def is_valid_password(password):
+    # Vérifie si le mot de passe a au moins 10 caractères
+    if len(password) < 10:
+        return False, "Le mot de passe doit contenir au moins 10 caractères."
+    
+    # Vérifie si le mot de passe contient des lettres minuscules, majuscules, des chiffres et des caractères spéciaux
+    has_lowercase = any(char.islower() for char in password)
+    has_uppercase = any(char.isupper() for char in password)
+    has_digit = any(char.isdigit() for char in password)
+    has_special = any(char in '!@#$%^&*()_-+={[}]|:;"<,>.?/~' for char in password)
+    
+    if not all([has_lowercase, has_uppercase, has_digit, has_special]):
+        return False, "Le mot de passe doit contenir des lettres minuscules, majuscules, des chiffres et des caractères spéciaux."
+
+    return True, None
+
 def handle_register(input_boxes):
     print("Inscription en cours...")
 
     # Récupération des valeurs des champs d'inscription
-    firstname = input_boxes[0].text
-    lastname = input_boxes[1].text
-    email = input_boxes[2].text
-    password = input_boxes[3].text
+    firstname = input_boxes[0].text.strip()
+    lastname = input_boxes[1].text.strip()
+    email = input_boxes[2].text.strip()
+    password = input_boxes[3].text.strip()
     
     # Validation des données saisies
-    if not firstname or not lastname or not email or not password:
+    if not all([firstname, lastname, email, password]):
         print("Erreur: Veuillez remplir tous les champs.")
-        return
+        return False
+    
+    # Validation de l'email
+    if not is_valid_email(email):
+        print("Erreur: L'adresse email n'est pas valide.")
+        return False
+    
+    # Vérification de l'unicité de l'email
+    if not is_unique_email(email):
+        print("Erreur: Cette adresse email est déjà utilisée.")
+        return False
+    
+    # Validation du mot de passe
+    is_valid, error_message = is_valid_password(password)
+    if not is_valid:
+        print(f"Erreur: {error_message}")
+        return False
     
     # Appel de la fonction register_user avec les données validées
     if register_user(firstname, lastname, email, password):
         print("Inscription réussie !")
+        return True
     else:
-        print("Erreur: Le mot de passe doit contenir au moins 10 caractères, dont des lettres minuscules, majuscules, des chiffres et des caractères spéciaux.")
+        print("Erreur: Une erreur s'est produite lors de l'inscription.")
+        return False
 
 def handle_login(input_boxes):
     print("Connexion en cours...")
 
     # Récupération des valeurs des champs de connexion (email et mot de passe)
-    email = input_boxes[0].text
-    password = input_boxes[1].text
+    email = input_boxes[2].text.strip()  # Le troisième champ est l'email
+    password = input_boxes[3].text.strip()  # Le quatrième champ est le mot de passe
 
     # Validation des données saisies
     if not email or not password:
         print("Erreur: Veuillez remplir tous les champs.")
-        return
+        return False
+    
     # Appel de la fonction login_user avec les données validées
     if login_user(email, password):
         print("Connexion réussie !")
+        return True
     else:
         print("Erreur: La connexion a échoué.")
-
+        return False
 
 def handle_events(input_boxes, register_button, login_button):
     for event in pygame.event.get():
@@ -166,9 +218,14 @@ def handle_events(input_boxes, register_button, login_button):
         # Gérer les événements des champs de texte
         for box in input_boxes:
             box.handle_event(event)
+            # Désactiver tous les champs de texte sauf ceux de l'email et du mot de passe lors de la connexion
+            if login_button.rect.collidepoint(pygame.mouse.get_pos()):
+                if box != input_boxes[2] and box != input_boxes[3]:
+                    box.active = False
+                    box.color = box.color_inactive
     return True
 
-def draw_elements(input_boxes, register_button, login_button):
+def draw_elements(input_boxes, register_button, login_button, is_register_page):
     # Afficher l'animation de fond
     screen.blit(background_image, (0, 0))
 
@@ -179,6 +236,16 @@ def draw_elements(input_boxes, register_button, login_button):
     # Afficher les boutons
     register_button.draw()
     login_button.draw()
+
+    # Afficher le texte de la page
+    draw_page_text(is_register_page)
+
+    # Si ce n'est pas la page d'inscription, effacer visuellement le nom et le prénom
+    if not is_register_page:
+        draw_text("Nom:", WHITE, 200, 200)
+        draw_text("Prénom:", WHITE, 200, 300)
+
+    pygame.display.flip()
 
 def draw_page_text(is_register_page):
     if is_register_page:
@@ -193,29 +260,26 @@ def draw_page_text(is_register_page):
         draw_text("Mot de passe:", BLACK, 130, 300)
 
 def main():
+    pygame.init()
     clock = pygame.time.Clock()
-    running = True  # Initialise la variable running à True
+    running = True
+    is_register_page = True  # Initialise la variable is_register_page à True
 
-    is_register_page = True
+    # Initialisation des autres éléments de l'interface
     input_boxes = [TextBox(300, 200, 200, 40), TextBox(300, 300, 200, 40), TextBox(300, 400, 200, 40), TextBox(300, 500, 200, 40)]
-
-    # Créer des boutons pour l'inscription et la connexion
     register_button = Button(300, 550, 100, 50, GREEN, BLACK, "S'inscrire", lambda: handle_register(input_boxes))
     login_button = Button(500, 550, 100, 50, RED, BLACK, "Se connecter", lambda: handle_login(input_boxes))
 
     while running:
         running = handle_events(input_boxes, register_button, login_button)
-
-        draw_elements(input_boxes, register_button, login_button)
-
-        draw_page_text(is_register_page)
+        
+        draw_elements(input_boxes, register_button, login_button, is_register_page)
 
         pygame.display.flip()
         clock.tick(60)  # Limite le nombre de frames par seconde
 
-    # Quitter Pygame
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
-
