@@ -185,11 +185,11 @@ def main():
 
         # Afficher le texte selon la page actuelle (inscription ou connexion)
         if is_register_page:
-            draw_text("Inscription", BLACK, 350, 100)
-            draw_text("Nom:", BLACK, 200, 200)
-            draw_text("Prénom:", BLACK, 200, 300)
-            draw_text("Email:", BLACK, 200, 400)
-            draw_text("Mot de passe:", BLACK, 200, 500)
+            draw_text("Inscription", BLACK, 350, 50)
+            draw_text("Nom:", BLACK, 129, 200)
+            draw_text("Prénom:", BLACK, 120, 300)
+            draw_text("Email:", BLACK, 120, 400)
+            draw_text("Mot de passe:", BLACK, 120, 500)
         else:
             draw_text("Connexion", BLACK, 350, 100)
             draw_text("Email:", BLACK, 200, 200)
