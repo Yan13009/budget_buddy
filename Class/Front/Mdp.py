@@ -59,7 +59,7 @@ class Mdp:
             mydb = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root",
+                password="maysa1995",
                 database="budget_buddy"
             )
 

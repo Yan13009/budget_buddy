@@ -70,15 +70,14 @@ def draw_text(text, color, x, y):
 
 # Classe pour créer des boutons
 class Button:
-    def __init__(self, x, y, width, height, text, action=None, color=None, text_color=BLACK):
+    def __init__(self, x, y, width, height, text, action=None, text_color=BLACK):
         self.rect = pygame.Rect(x, y, width, height)
-        self.color = color if color else WHITE  # Utiliser WHITE comme couleur par défaut si aucune n'est spécifiée
         self.text_color = text_color
         self.text = text
         self.action = action
 
     def draw(self):
-        pygame.draw.rect(fenetre, self.color, self.rect)
+        pygame.draw.rect(fenetre, WHITE, self.rect)  # Dessiner un rectangle blanc pour les marges
         draw_text(self.text, self.text_color, self.rect.x + self.rect.width // 2 - 50, self.rect.y + self.rect.height // 2 - 15)
 
     def handle_event(self, event):
@@ -198,3 +197,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
