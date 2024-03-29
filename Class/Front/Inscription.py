@@ -11,7 +11,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 # Initialiser la fenêtre
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+fenetre = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Interface d'inscription et de connexion")
 
 # Charger l'image de fond
@@ -66,7 +66,7 @@ def login_user(email, password):
 # Fonction pour afficher du texte à l'écran
 def draw_text(text, color, x, y):
     surface = font.render(text, True, color)
-    screen.blit(surface, (x, y))
+    fenetre.blit(surface, (x, y))
 
 # Classe pour créer des boutons
 class Button:
@@ -78,7 +78,7 @@ class Button:
         self.action = action
 
     def draw(self):
-        pygame.draw.rect(screen, self.color, self.rect)
+        pygame.draw.rect(fenetre, self.color, self.rect)
         draw_text(self.text, self.text_color, self.rect.x + self.rect.width // 2 - 50, self.rect.y + self.rect.height // 2 - 15)
 
     def handle_event(self, event):
@@ -94,7 +94,7 @@ class TextBox:
         self.text = ""
 
     def draw(self):
-        pygame.draw.rect(screen, WHITE, self.rect, 2)
+        pygame.draw.rect(fenetre, WHITE, self.rect, 2)
         draw_text(self.text, BLACK, self.rect.x + 5, self.rect.y + 5)
 
     def handle_event(self, event):
@@ -168,7 +168,7 @@ def main():
                 box.handle_event(event)
 
         # Afficher l'animation de fond
-        screen.blit(background_image, (0, 0))
+        fenetre.blit(background_image, (0, 0))
 
         # Afficher les champs de texte
         for box in input_boxes:
