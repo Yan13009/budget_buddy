@@ -1,36 +1,19 @@
 import pygame
+N = (0, 0, 0)
+L = (97, 84, 105)
 
 class Button:
-    def __init__(self, text, x, y, width, height, color, hover_color):
-        self.text = text
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+    def __init__(self, x, y, width, height, color, text, font):
+        self.rect = pygame.Rect(x, y, width, height)
         self.color = color
-        self.hover_color = hover_color
-        self.hovered = False
+        self.text = text
+        self.font = font
 
-    def draw(self, screen):
-        # Dessiner le bouton sur l'écran
-        if self.hovered:
-            pygame.draw.rect(screen, self.hover_color, (self.x, self.y, self.width, self.height))
-        else:
-            pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
-        # Dessiner le texte du bouton
-        font = pygame.font.Font(None, 36)
-        text_surface = font.render(self.text, True, (255, 255, 255))
-        text_rect = text_surface.get_rect(center=(self.x + self.width / 2, self.y + self.height / 2))
-        screen.blit(text_surface, text_rect)
+    def draw_button(self, surface):
+        pygame.draw.rect(surface, self.color, self.rect)
+        text_surface = self.font.render(self.text, True, L)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        surface.blit(text_surface, text_rect)
 
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            # Vérifier si la souris survole le bouton
-            if self.x < event.pos[0] < self.x + self.width and self.y < event.pos[1] < self.y + self.height:
-                self.hovered = True
-            else:
-                self.hovered = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.hovered:
-                # Appeler une action lorsque le bouton est cliqué
-                print("Button clicked!")  # Remplacez ceci par l'action que vous souhaitez effectuer
+    def is_clicked(self, mouse_pos):
+        return self.rect.collidepoint(mouse_pos)
