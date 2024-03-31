@@ -64,6 +64,16 @@ while True:
     B_text = B_font.render("Bienvenue", True, N)  # Couleur rouge (255, 0, 0)
     B_rect = B_text.get_rect(topleft=(100, 300))  # Position en haut à gauche
 
+    # Charger l'image du bouton
+    image_logo = pygame.image.load('Classes/Images/icons8-accumulate-48.png')
+    n_width = 80
+    n_height = 80
+    image_logo = pygame.transform.scale(image_logo, (n_width, n_height))  # Ajuster la taille au besoin
+
+    # Créer un rectangle pour le bouton
+    google_rect = image_logo.get_rect()
+    google_rect.topleft = (250, 400)  # Position sous le texte "Bienvenue"
+
     
 
     BK.blit(image, (0, 0))       
@@ -84,4 +94,6 @@ while True:
     BK.blit(t_text, t_rect)
     # Affichage du mot "Bienvenue" à l'écran
     BK.blit(B_text, B_rect)
+    # Afficher l'image du bouton
+    BK.blit(image_logo, google_rect)
     pygame.display.update()
