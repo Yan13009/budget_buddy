@@ -1,3 +1,4 @@
+"""
 import pygame
 
 
@@ -28,3 +29,4 @@ class EyeButton:
         self.show_password = not self.show_password
         # Appelez la méthode toggle_password_visibility de la classe Connexion
         self.connexion.toggle_password_visibility()
+"""

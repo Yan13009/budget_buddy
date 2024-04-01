@@ -7,7 +7,7 @@ class Server:
         self.db_config = {
             'host': 'localhost',
             'user': 'root',
-            'password': 'maysa1995',
+            'password': 'root',
             'database': 'budget_buddy'
         }
         self.mydb = mysql.connector.connect(**self.db_config)

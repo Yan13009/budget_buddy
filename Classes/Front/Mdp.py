@@ -5,7 +5,7 @@ import mysql.connector
 class Mdp:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((600, 400))
+        self.BK = pygame.display.set_mode((1000, 700))
         pygame.display.set_caption("Mot de passe")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 32)
@@ -81,10 +81,10 @@ class Mdp:
             self.handle_events()
 
             # Dessiner l'interface utilisateur
-            self.screen.fill((255, 255, 255))
-            pygame.draw.rect(self.screen, (17, 86, 95), (100, 100, 400, 50))
+            self.BK.fill((255, 255, 255))
+            pygame.draw.rect(self.BK, (17, 86, 95), (100, 100, 400, 50))
             text_surface = self.font.render(self.password, True, (255, 255, 255))
-            self.screen.blit(text_surface, (110, 110))
+            self.BK.blit(text_surface, (110, 110))
             pygame.display.flip()
 
             self.clock.tick(60)
