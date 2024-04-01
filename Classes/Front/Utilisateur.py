@@ -18,3 +18,4 @@ while running:
     
     BK.blit(image, (0, 0))
     pygame.display.flip()
+

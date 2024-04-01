@@ -92,12 +92,13 @@ class Connexion:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.connexion_button.is_clicked(pygame.mouse.get_pos()):
                         print("Bouton de connexion cliqué !")
+                        import Utilisateur
 
                 # Gérer les événements pour "Mot de passe oublié"
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if MDP_O_rect.collidepoint(pygame.mouse.get_pos()):
                         print("Mot de passe oublié cliqué !")
-                        self.login_user()
+                        import Mdp
                         
                         # Ajoutez ici le code pour gérer le mot de passe oublié
  

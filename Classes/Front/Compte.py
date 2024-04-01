@@ -1,6 +1,9 @@
+import re
 import pygame 
 from pygame.locals import *
 from Button import Button 
+from TextInput import TextInput
+import mysql.connector
 pygame.init()
 
 class Compte:
@@ -14,15 +17,55 @@ class Compte:
         self.N = (0, 0, 0)
         self.L = (97, 84, 105)
 
-        self.username = ""
-        self.password = ""
+        self.Nom_input = TextInput(80, 130, 290, 40, self.font, self.N, self.L, self.L)
+        self.Prenom_input = TextInput(80, 225, 290, 40, self.font, self.N, self.L, self.L)
+        self.email_input = TextInput(80, 320, 290, 40, self.font, self.N, self.L, self.L)
+        self.Mdp_input = TextInput(80, 415, 290, 40, self.font, self.N, self.L, self.L)
+        self.Cmdp_input = TextInput(80, 510, 290, 40, self.font, self.N, self.L, self.L)
 
         self.x = 50
-        self.y = 50
+        self.y = 40
         self.width = 475
         self.height = 650
-        
+
+    def check__Mdp(self, password):
+        # Vérifie si le mot de passe satisfait aux critères requis
+        if len(password) < 10:
+            return False
+        if not re.search(r'[A-Z]', password):
+            return False
+        if not re.search(r'[a-z]', password):
+            return False
+        if not re.search(r'[0-9]', password):
+            return False
+        if not re.search(r'[!@#$%^&*()-_+=]', password):
+            return False
+        return True    
     
+    def register_user(self, nom, prenom, email, mot_de_passe):
+        # Vérifie d'abord la force du mot de passe
+        if not self.check__Mdp(mot_de_passe):
+            print("Le mot de passe ne satisfait pas aux critères de sécurité.")
+            return
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="maysa1995",
+                database="budget_buddy"
+            )
+
+            mycursor = mydb.cursor()
+
+            sql = "INSERT INTO compte (nom, prenom, email, mot_de_passe) VALUES (%s, %s, %s, %s)"
+            val = (nom, prenom, email, mot_de_passe)
+            mycursor.execute(sql, val)
+
+            mydb.commit()
+
+            print("Utilisateur enregistré avec succès.")
+        except Exception as e:
+            print("Erreur lors de l'enregistrement de l'utilisateur :", e)
 
     
     def run(self):
@@ -32,9 +75,20 @@ class Compte:
                 if event.type == pygame.QUIT:
                     quit()
                 elif event.type == MOUSEBUTTONDOWN:
-                    if connexion_button.is_clicked(mouse_pos):
-                        pass
                     # Gérer les clics de souris pour les interactions avec les champs d'entrée
+                    self.Nom_input.handle_event(event)
+                    self.Prenom_input.handle_event(event)
+                    self.email_input.handle_event(event)
+                    self.Mdp_input.handle_event(event)
+                    self.Cmdp_input.handle_event(event)
+                elif event.type == KEYDOWN:  # Gérer les événements de touche en entrée de texte
+                    self.Nom_input.handle_event(event)
+                    self.Prenom_input.handle_event(event)
+                    self.email_input.handle_event(event)
+                    self.Mdp_input.handle_event(event)
+                    self.Cmdp_input.handle_event(event)    
+
+
 
             B_font = pygame.font.Font("Classes/Images/CFAzteques-Regular.ttf", 70)
             B_text = B_font.render("Bienvenue", True, self.N)
@@ -103,6 +157,15 @@ class Compte:
 
             self.BK.blit(facebook_logo, facebook_rect)
             self.BK.blit(google_logo, google_rect)
+
+            # Dessiner les champs de texte
+            self.Nom_input.draw(self.BK)
+            self.Prenom_input.draw(self.BK)
+            self.email_input.draw(self.BK)
+            self.Mdp_input.draw(self.BK)
+            self.Cmdp_input.draw(self.BK)
+
+
             pygame.display.update() 
 
 if __name__ == "__main__":
