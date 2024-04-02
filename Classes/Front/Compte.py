@@ -17,11 +17,11 @@ class Compte:
         self.N = (0, 0, 0)
         self.L = (97, 84, 105)
 
-        self.Nom_input = TextInput(80, 130, 290, 40, self.font, self.N, self.L, self.L)
-        self.Prenom_input = TextInput(80, 225, 290, 40, self.font, self.N, self.L, self.L)
-        self.email_input = TextInput(80, 320, 290, 40, self.font, self.N, self.L, self.L)
-        self.Mdp_input = TextInput(80, 415, 290, 40, self.font, self.N, self.L, self.L)
-        self.Cmdp_input = TextInput(80, 510, 290, 40, self.font, self.N, self.L, self.L)
+        self.Nom_input = TextInput(80, 140, 290, 40, self.font, self.L, self.N, self.N)
+        self.Prenom_input = TextInput(80, 235, 290, 40, self.font, self.L, self.N, self.N)
+        self.email_input = TextInput(80, 330, 290, 40, self.font, self.L, self.N, self.N)
+        self.Mdp_input = TextInput(80, 425, 290, 40, self.font, self.L, self.N, self.N)
+        self.Cmdp_input = TextInput(80, 520, 290, 40, self.font, self.L, self.N, self.N)
 
         self.x = 50
         self.y = 40
