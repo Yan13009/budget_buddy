@@ -4,7 +4,7 @@ from Button import Button
 from Compte import Compte
 from TextInput import TextInput
 import mysql.connector
-
+from Transaction import  TransactionInterface
 pygame.init()
 
 class Connexion:
@@ -88,6 +88,7 @@ class Connexion:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+                    
 
                 # Gérer les événements pour les champs de texte
                 self.username_input.handle_event(event)
@@ -96,8 +97,10 @@ class Connexion:
                 # Gérer les événements pour le bouton de connexion
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.connexion_button.is_clicked(pygame.mouse.get_pos()):
+                        interface = TransactionInterface()
+                        interface.run()
                         print("Bouton de connexion cliqué !")
-                        self.login_user(self.username_input.get_text(), self.password_input.get_text())
+                        #self.login_user(self.username_input.get_text(), self.password_input.get_text())
 
                 # Gérer les événements pour "Mot de passe oublié"
                 if event.type == pygame.MOUSEBUTTONDOWN:
