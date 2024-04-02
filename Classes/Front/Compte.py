@@ -51,13 +51,13 @@ class Compte:
             mydb = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="maysa1995",
+                password="Maysa1995@",
                 database="budget_buddy"
             )
 
             mycursor = mydb.cursor()
 
-            sql = "INSERT INTO compte (nom, prenom, email, mot_de_passe) VALUES (%s, %s, %s, %s)"
+            sql = "INSERT INTO user (nom, prenom, email, mot_de_passe) VALUES (%s, %s, %s, %s)"
             val = (nom, prenom, email, mot_de_passe)
             mycursor.execute(sql, val)
 

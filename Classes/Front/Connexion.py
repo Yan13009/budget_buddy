@@ -51,26 +51,31 @@ class Connexion:
 
         self.connexion_button = Button(570, 400, 250, 40, self.N, "Se connecter", self.font)
 
-    def login_user(self, nom, email, mot_de_passe):
+    def login_user(self, email, mot_de_passe):
         try:
             mydb = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root",
+                password="Maysa1995@",
                 database="budget_buddy"
             )
 
             mycursor = mydb.cursor()
 
-            sql = "INSERT INTO compte (nom, email, mot_de_passe) VALUES (%s, %s, %s, %s)"
-            val = (nom, email, mot_de_passe)
+            sql = "SELECT * FROM user WHERE email = %s AND mot_de_passe = %s"
+            val = (email, mot_de_passe)
             mycursor.execute(sql, val)
 
-            mydb.commit()
+            user = mycursor.fetchone()
 
-            print('Succès', 'La connexion est établie ')
+            if user:
+                print("Connexion réussie !")
+                # Ajoutez ici le code pour autoriser l'accès à l'utilisateur
+            else:
+                print("Nom d'utilisateur ou mot de passe incorrect.")
+
         except Exception as e:
-            print("Erreur lors d'\authentification.", e)  
+            print("Erreur lors de l'authentification :", e)
     
     def creer_compte(self):
         compte = Compte()
@@ -92,7 +97,7 @@ class Connexion:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.connexion_button.is_clicked(pygame.mouse.get_pos()):
                         print("Bouton de connexion cliqué !")
-                        import Utilisateur
+                        self.login_user(self.username_input.get_text(), self.password_input.get_text())
 
                 # Gérer les événements pour "Mot de passe oublié"
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -148,4 +153,3 @@ class Connexion:
 
 connexion = Connexion()
 connexion.run()
-
